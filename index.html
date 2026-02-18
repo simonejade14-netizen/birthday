@@ -1209,6 +1209,30 @@
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
       }
 
+      /* Hide YouTube player completely */
+      #backgroundMusic {
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: -9999;
+        overflow: hidden;
+      }
+
+      #backgroundMusic iframe {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+        width: 1px !important;
+        height: 1px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+      }
+
       /* ============================================
          COMPLETION CONFETTI
          ============================================ */
@@ -2112,10 +2136,17 @@
             autoplay: 1, // Enable autoplay
             loop: 1,
             playlist: videoId,
-            controls: 0,
-            modestbranding: 1,
-            rel: 0,
+            controls: 0, // Hide controls
+            modestbranding: 1, // Minimal branding
+            rel: 0, // Don't show related videos
             mute: 0, // Start unmuted (browser may block this, we'll handle it)
+            iv_load_policy: 3, // Hide video annotations
+            showinfo: 0, // Hide video info
+            fs: 0, // Disable fullscreen button
+            cc_load_policy: 0, // Hide captions
+            disablekb: 1, // Disable keyboard controls
+            playsinline: 1, // Play inline on mobile
+            enablejsapi: 1, // Enable JS API
           },
           events: {
             onReady: function (event) {
@@ -2235,5 +2266,4 @@
       updateReasonsProgress();
     </script>
   </body>
-
 </html>
