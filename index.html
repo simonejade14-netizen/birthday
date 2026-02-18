@@ -1211,26 +1211,53 @@
 
       /* Hide YouTube player completely */
       #backgroundMusic {
-        position: fixed;
-        top: -9999px;
-        left: -9999px;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-        pointer-events: none;
-        z-index: -9999;
-        overflow: hidden;
+        position: fixed !important;
+        top: -9999px !important;
+        left: -9999px !important;
+        width: 1px !important;
+        height: 1px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
+        overflow: hidden !important;
+        visibility: hidden !important;
+        display: none !important;
       }
 
-      #backgroundMusic iframe {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
+      #backgroundMusic iframe,
+      #backgroundMusic > iframe,
+      iframe[src*='youtube.com'],
+      iframe[src*='youtu.be'] {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
         width: 1px !important;
         height: 1px !important;
         opacity: 0 !important;
         pointer-events: none !important;
         visibility: hidden !important;
+        display: none !important;
+        border: none !important;
+      }
+
+      /* Hide any YouTube overlays or popups */
+      .ytp-watermark,
+      .ytp-chrome-top,
+      .ytp-show-cards-title,
+      .ytp-cards-teaser,
+      .ytp-ce-element,
+      .ytp-pause-overlay,
+      .ytp-suggested-action,
+      .annotation,
+      .ytp-impression-link,
+      .ytp-title,
+      .ytp-watch-later-button,
+      .ytp-share-button,
+      .ytp-overflow-button {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
       }
 
       /* ============================================
@@ -2128,6 +2155,53 @@
 
       let playerReady = false;
 
+      // Function to hide YouTube overlays and popups
+      function hideYouTubeOverlays() {
+        // Hide YouTube player container
+        const playerContainer = document.getElementById('backgroundMusic');
+        if (playerContainer) {
+          playerContainer.style.display = 'none';
+          playerContainer.style.visibility = 'hidden';
+          playerContainer.style.opacity = '0';
+          playerContainer.style.position = 'fixed';
+          playerContainer.style.top = '-9999px';
+          playerContainer.style.left = '-9999px';
+          playerContainer.style.width = '1px';
+          playerContainer.style.height = '1px';
+          playerContainer.style.zIndex = '-9999';
+          playerContainer.style.pointerEvents = 'none';
+        }
+
+        // Hide all YouTube iframes
+        const allIframes = document.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="youtu.be"]');
+        allIframes.forEach((iframe) => {
+          iframe.style.display = 'none';
+          iframe.style.visibility = 'hidden';
+          iframe.style.opacity = '0';
+          iframe.style.position = 'fixed';
+          iframe.style.top = '-9999px';
+          iframe.style.left = '-9999px';
+          iframe.style.width = '1px';
+          iframe.style.height = '1px';
+          iframe.style.zIndex = '-9999';
+          iframe.style.pointerEvents = 'none';
+        });
+
+        // Hide YouTube overlays and popups
+        const overlays = document.querySelectorAll(
+          '.ytp-watermark, .ytp-chrome-top, .ytp-show-cards-title, .ytp-cards-teaser, ' +
+            '.ytp-ce-element, .ytp-pause-overlay, .ytp-suggested-action, .annotation, ' +
+            '.ytp-impression-link, .ytp-title, .ytp-watch-later-button, .ytp-share-button, ' +
+            '.ytp-overflow-button, .ytp-endscreen-content, .ytp-ce-shadow, .ytp-ce-size-1920',
+        );
+        overlays.forEach((el) => {
+          el.style.display = 'none';
+          el.style.visibility = 'hidden';
+          el.style.opacity = '0';
+          el.style.pointerEvents = 'none';
+        });
+      }
+
       // Initialize YouTube player when API is ready
       window.onYouTubeIframeAPIReady = function () {
         youtubePlayer = new YT.Player('backgroundMusic', {
@@ -2152,6 +2226,13 @@
             onReady: function (event) {
               playerReady = true;
               console.log('YouTube player is ready');
+
+              // Hide any YouTube overlays immediately
+              hideYouTubeOverlays();
+
+              // Set up interval to continuously hide overlays
+              setInterval(hideYouTubeOverlays, 100);
+
               // Try to start playing immediately
               try {
                 youtubePlayer.unMute();
@@ -2248,6 +2329,10 @@
       // ============================================
       // INITIALIZATION
       // ============================================
+
+      // Hide YouTube overlays immediately and continuously
+      hideYouTubeOverlays();
+      setInterval(hideYouTubeOverlays, 100);
 
       // Load saved progress on page load
       loadProgress();
