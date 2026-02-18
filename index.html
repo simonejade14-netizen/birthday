@@ -1209,19 +1209,23 @@
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
       }
 
-      /* Hide YouTube player completely */
+      /* Make YouTube player extremely small (1px x 1px) in corner */
       #backgroundMusic {
         position: fixed !important;
-        top: -9999px !important;
-        left: -9999px !important;
+        bottom: 0 !important;
+        right: 0 !important;
         width: 1px !important;
         height: 1px !important;
-        opacity: 0 !important;
+        min-width: 1px !important;
+        min-height: 1px !important;
+        max-width: 1px !important;
+        max-height: 1px !important;
+        opacity: 0.01 !important;
         pointer-events: none !important;
         z-index: -9999 !important;
         overflow: hidden !important;
-        visibility: hidden !important;
-        display: none !important;
+        clip: rect(0, 1px, 1px, 0) !important;
+        clip-path: inset(99%) !important;
       }
 
       #backgroundMusic iframe,
@@ -1229,15 +1233,21 @@
       iframe[src*='youtube.com'],
       iframe[src*='youtu.be'] {
         position: absolute !important;
-        top: -9999px !important;
-        left: -9999px !important;
+        bottom: 0 !important;
+        right: 0 !important;
         width: 1px !important;
         height: 1px !important;
-        opacity: 0 !important;
+        min-width: 1px !important;
+        min-height: 1px !important;
+        max-width: 1px !important;
+        max-height: 1px !important;
+        opacity: 0.01 !important;
         pointer-events: none !important;
-        visibility: hidden !important;
-        display: none !important;
         border: none !important;
+        transform: scale(0.01) !important;
+        transform-origin: bottom right !important;
+        clip: rect(0, 1px, 1px, 0) !important;
+        clip-path: inset(99%) !important;
       }
 
       /* Hide any YouTube overlays or popups */
@@ -2155,36 +2165,47 @@
 
       let playerReady = false;
 
-      // Function to hide YouTube overlays and popups
+      // Function to make YouTube player extremely small
       function hideYouTubeOverlays() {
-        // Hide YouTube player container
+        // Make YouTube player container extremely small
         const playerContainer = document.getElementById('backgroundMusic');
         if (playerContainer) {
-          playerContainer.style.display = 'none';
-          playerContainer.style.visibility = 'hidden';
-          playerContainer.style.opacity = '0';
           playerContainer.style.position = 'fixed';
-          playerContainer.style.top = '-9999px';
-          playerContainer.style.left = '-9999px';
+          playerContainer.style.bottom = '0';
+          playerContainer.style.right = '0';
           playerContainer.style.width = '1px';
           playerContainer.style.height = '1px';
+          playerContainer.style.minWidth = '1px';
+          playerContainer.style.minHeight = '1px';
+          playerContainer.style.maxWidth = '1px';
+          playerContainer.style.maxHeight = '1px';
+          playerContainer.style.opacity = '0.01';
           playerContainer.style.zIndex = '-9999';
           playerContainer.style.pointerEvents = 'none';
+          playerContainer.style.overflow = 'hidden';
+          playerContainer.style.clip = 'rect(0, 1px, 1px, 0)';
+          playerContainer.style.clipPath = 'inset(99%)';
         }
 
-        // Hide all YouTube iframes
+        // Make all YouTube iframes extremely small
         const allIframes = document.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="youtu.be"]');
         allIframes.forEach((iframe) => {
-          iframe.style.display = 'none';
-          iframe.style.visibility = 'hidden';
-          iframe.style.opacity = '0';
-          iframe.style.position = 'fixed';
-          iframe.style.top = '-9999px';
-          iframe.style.left = '-9999px';
+          iframe.style.position = 'absolute';
+          iframe.style.bottom = '0';
+          iframe.style.right = '0';
           iframe.style.width = '1px';
           iframe.style.height = '1px';
+          iframe.style.minWidth = '1px';
+          iframe.style.minHeight = '1px';
+          iframe.style.maxWidth = '1px';
+          iframe.style.maxHeight = '1px';
+          iframe.style.opacity = '0.01';
           iframe.style.zIndex = '-9999';
           iframe.style.pointerEvents = 'none';
+          iframe.style.transform = 'scale(0.01)';
+          iframe.style.transformOrigin = 'bottom right';
+          iframe.style.clip = 'rect(0, 1px, 1px, 0)';
+          iframe.style.clipPath = 'inset(99%)';
         });
 
         // Hide YouTube overlays and popups
