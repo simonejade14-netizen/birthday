@@ -691,6 +691,7 @@
 
       .lock-modal.active {
         display: block;
+        opacity: 1;
         animation: popCentered 0.6s ease;
       }
 
@@ -1713,21 +1714,48 @@
         const modal = document.getElementById('lockModal');
         const backdrop = document.getElementById('lockModalBackdrop');
         const modalContent = document.getElementById('lockModalContent');
+
+        if (!modal || !backdrop || !modalContent) {
+          console.error('Lock modal elements not found', { modal, backdrop, modalContent });
+          // Try to find elements again after a short delay
+          setTimeout(() => {
+            const retryModal = document.getElementById('lockModal');
+            const retryBackdrop = document.getElementById('lockModalBackdrop');
+            const retryContent = document.getElementById('lockModalContent');
+            if (retryModal && retryBackdrop && retryContent) {
+              retryContent.textContent = message;
+              retryModal.classList.add('active');
+              retryBackdrop.classList.add('active');
+            }
+          }, 100);
+          return;
+        }
+
         modalContent.textContent = message;
+        // Force reflow to ensure display change takes effect
+        modal.offsetHeight;
         modal.classList.add('active');
         backdrop.classList.add('active');
       }
 
-      // Lock modal close handler
-      document.getElementById('lockModalClose').addEventListener('click', () => {
-        document.getElementById('lockModal').classList.remove('active');
-        document.getElementById('lockModalBackdrop').classList.remove('active');
-      });
+      // Lock modal close handler - ensure elements exist before attaching listeners
+      const lockModalClose = document.getElementById('lockModalClose');
+      const lockModal = document.getElementById('lockModal');
+      const lockModalBackdrop = document.getElementById('lockModalBackdrop');
 
-      document.getElementById('lockModalBackdrop').addEventListener('click', () => {
-        document.getElementById('lockModal').classList.remove('active');
-        document.getElementById('lockModalBackdrop').classList.remove('active');
-      });
+      if (lockModalClose) {
+        lockModalClose.addEventListener('click', () => {
+          if (lockModal) lockModal.classList.remove('active');
+          if (lockModalBackdrop) lockModalBackdrop.classList.remove('active');
+        });
+      }
+
+      if (lockModalBackdrop) {
+        lockModalBackdrop.addEventListener('click', () => {
+          if (lockModal) lockModal.classList.remove('active');
+          if (lockModalBackdrop) lockModalBackdrop.classList.remove('active');
+        });
+      }
 
       // Function to update icon states based on progression
       function updateIconStates() {
